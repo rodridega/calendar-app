@@ -56,7 +56,7 @@ export const CalendarModal = () => {
     setDateEnd(e);
     setFormValues({
       ...formValues,
-      start: e,
+      end: e,
     });
   };
   const handleSubmitForm = (e) => {
@@ -64,8 +64,6 @@ export const CalendarModal = () => {
 
     const momentStart = moment(start);
     const momentEnd = moment(end);
-    console.log(momentStart);
-    console.log();
 
     if (momentStart.isSameOrAfter(momentEnd)) {
       console.log("error");
