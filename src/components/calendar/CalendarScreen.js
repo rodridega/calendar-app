@@ -7,39 +7,39 @@ import "moment/locale/es";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { CalendarEvent } from "./CalendarEvent";
 import { CalendarModal } from "./CalendarModal";
+import { uiOpenModal } from "../actions/ui";
+import { useDispatch, useSelector } from "react-redux";
+import { eventClearActiveEvent, eventSetActive } from "../actions/events";
+import { AddNewFab } from "../ui/AddNewFab";
+import { DeleteEventFab } from "../ui/DeleteEventFab";
 moment.locale("es");
 
 const localizer = momentLocalizer(moment); // or globalizeLocalizer
 
-const events = [
-  {
-    title: "Cupleaños del jefe",
-    start: moment().toDate(),
-    end: moment().add(2, "hours").toDate(),
-    bgcolor: "red",
-    notes: "comprar el pastel",
-    user: {
-      _id: "123",
-      name: "Lucia",
-    },
-  },
-];
 
 export const CalendarScreen = () => {
+  const dispatch = useDispatch();
+
+  const { events, activeEvent } = useSelector((state) => state.calendar);
+
   const [lastView, setLastView] = useState(
     localStorage.getItem("lastView") || "month"
   );
 
   const onDoubleClick = (e) => {
-    console.log(e);
+    dispatch(uiOpenModal());
+    
   };
 
   const onSelectEvent = (e) => {
-    console.log(e);
+    dispatch(eventSetActive(e));
   };
   const onViewChange = (e) => {
     setLastView(e);
     localStorage.setItem("lastView", e);
+  };
+  const onSelectSlot = () => {
+    dispatch(eventClearActiveEvent());
   };
 
   const eventStyleGetter = (event, start, end, isSelected) => {
@@ -67,6 +67,8 @@ export const CalendarScreen = () => {
         eventPropGetter={eventStyleGetter}
         onDoubleClickEvent={onDoubleClick}
         onSelectEvent={onSelectEvent}
+        onSelectSlot={onSelectSlot}
+        selectable={true}
         onView={onViewChange}
         view={lastView}
         components={{
@@ -74,6 +76,9 @@ export const CalendarScreen = () => {
         }}
       />
 
+      <AddNewFab />
+      {activeEvent && <DeleteEventFab />}
+      
       <CalendarModal />
     </div>
   );
