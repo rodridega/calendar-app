@@ -17,13 +17,14 @@ const fetchSinToken = (endpoint, data, method = "GET") => {
 const fetchConToken = (endpoint, data, method = "GET") => {
   const url = `${baseURL}/${endpoint}`;
 
-  const  token = localStorage.getItem("token") || "";
+  const token = localStorage.getItem("token") || "";
+
   if (method === "GET") {
     return fetch(url, {
       method,
       headers: {
         "x-token": token,
-      },
+      }
     });
   } else {
     return fetch(url, {
